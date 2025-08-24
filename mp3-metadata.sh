@@ -4,7 +4,7 @@ set_mp3_metadata(){
 
     if [ $# -ne 1 ] ; then
         echo "invalid number of arguments...
-            Example of usage: $0 \"path/to/my - music to name.mp3\"">&2
+            Example of usage: set_mp3_metadata \"path/to/my - music to name.mp3\"">&2
         return 1
     fi
 
