@@ -57,8 +57,7 @@ declare -A _BRACKETS=(
 
 _escape_for_sed() {
   local char="$1"
-  local specials=( '.' '^' '$' '*' '+' '?' '(' ')' '[' ']' '{' '}' '\' '|' '-' )
-  
+  local specials=( '.' '^' '$' '*' '+' '?' '(' ')' '[' ']' '{' '}' '\' '|' '-' )  
   for s in "${specials[@]}"; do
     if [[ "$char" == "$s" ]]; then
       printf '\\%s' "$char"
@@ -72,12 +71,12 @@ _escape_for_sed() {
 
 _remove_innermost_pair() {
   local str="$1"
-  local left_esc right_esc
+  local left="$2"
+  local right="$3"
+  left_esc=$(_escape_for_sed "$left")
+  right_esc=$(_escape_for_sed "$right")
 
-  left_esc=$(_escape_for_sed "$2")
-  right_esc=$(_escape_for_sed "$3")
-
-  echo "$str" | sed -E "s/${left_esc}[^${left_esc}${right_esc}]*${right_esc}//g"
+  echo "$str" | sed -E "s/${left_esc}[^${right}${left}]*${right_esc}//g"
 }
 
 _remove_pair(){
@@ -102,4 +101,22 @@ _remove_pairs(){
     parsed_str="$(_remove_pair "$parsed_str" "$l" "$r")"
   done
   echo "$parsed_str"
+}
+
+remove_brackets_from_filenames() {
+  for file in "$@"; do
+    local dir=$(dirname -- "$file")
+    local base=$(basename -- "$file")
+    local ext=".${base##*.}"
+    if [ "$ext" == ".$base" ]; then
+      ext=""
+    fi
+    local name="${base%.*}" # File name without extension
+    local new_name=$(_remove_pairs "$name")
+    local new_base="${new_name}${ext}"
+    if [ "${base}" == "${new_base}" ]; then
+      continue
+    fi
+    mv -- "$file" "$dir/$new_base"
+  done
 }

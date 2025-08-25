@@ -2,15 +2,16 @@
 
 load '../pair-remover.sh'
 
-## Setup functions
-
-function setup_brackets() {
-    # Declare a minimal set of brackets for testing
+setup() {
     declare -gA _BRACKETS=(
       ["("]=")"
       ["["]="]"
       ["{"]="}"
     )
+}
+
+teardown() {
+    unset _BRACKETS
 }
 
 ## _remove_innermost_pair
@@ -19,6 +20,12 @@ function setup_brackets() {
     run _remove_innermost_pair "a(b(c)d)e" "(" ")"
     [ "$status" -eq 0 ]
     [ "$output" = "a(bd)e" ]
+}
+
+@test "_remove_innermost_pair - nominal [ ]" {
+    run _remove_innermost_pair "a[b[c]d]e" "[" "]"
+    [ "$status" -eq 0 ]
+    [ "$output" = "a[bd]e" ]
 }
 
 @test "_remove_innermost_pair - nominal nothing to remove" {
@@ -45,6 +52,18 @@ function setup_brackets() {
     [ "$output" = "abcd)e" ]
 }
 
+@test "_remove_innermost_pair - nominal unballanced left [ ]" {
+    run _remove_innermost_pair "a[b[c]de" "[" "]"
+    [ "$status" -eq 0 ]
+    [ "$output" = "a[bde" ]
+}
+
+@test "_remove_innermost_pair - nominal unballanced right [ ]" {
+    run _remove_innermost_pair "ab[c]d]e" "[" "]"
+    [ "$status" -eq 0 ]
+    [ "$output" = "abd]e" ]
+}
+
 ## _remove_pair
 
 @test "_remove_pair - nominal" {
@@ -53,43 +72,91 @@ function setup_brackets() {
     [ "$output" = "aeg" ]
 }
 
+@test "_remove_pair - nominal real case" {
+    run _remove_pair "artist (ft. enculos) - title [audio version].mp3" "(" ")"
+    [ "$status" -eq 0 ]
+    [ "$output" = "artist  - title [audio version].mp3" ]
+}
+
 @test "_remove_pair - nominal nothing to remove" {
     run _remove_pair "abcde" "(" ")"
     [ "$status" -eq 0 ]
     [ "$output" = "abcde" ]
 }
 
-@test "_remove_pair - nominal unballanced left" {
-    run _remove_pair "a(b(c)de" "(" ")"
-    [ "$status" -eq 0 ]
-    [ "$output" = "a(bde" ]
-}
-
-@test "_remove_pair - nominal unballanced right" {
-    run _remove_pair "ab(c)d)e" "(" ")"
-    [ "$status" -eq 0 ]
-    [ "$output" = "abd)e" ]
-}
-
 ## _remove_pairs
 
 @test "_remove_pairs - nominal" {
-    setup_brackets
     run _remove_pairs "a(b(c)d)e(f)g"
     [ "$status" -eq 0 ]
     [ "$output" = "aeg" ]
 }
 
+@test "_remove_pairs - nominal real case" {
+    run _remove_pairs "artist (ft. enculos) - title [audio version].mp3"
+    [ "$status" -eq 0 ]
+    [ "$output" = "artist  - title .mp3" ]
+}
+
 @test "_remove_pairs - nominal nothing to remove" {
-    setup_brackets
     run _remove_pairs "abcde"
     [ "$status" -eq 0 ]
     [ "$output" = "abcde" ]
 }
 
 @test "_remove_pairs - nominal 2 bracket types" {
-    setup_brackets
     run _remove_pairs "a(bc)[d]e"
     [ "$status" -eq 0 ]
     [ "$output" = "ae" ]
+}
+
+# remove_brackets_from_filenames
+
+@test "remove_brackets_from_filenames - nominal" {
+    file="${BATS_TMPDIR}/ab(c)de"
+    touch "$file"
+
+    run remove_brackets_from_filenames "$file"
+    [ "$status" -eq 0 ]
+    [ -f "$BATS_TMPDIR/abde" ]
+    [ ! -f "$file" ]
+}
+
+@test "remove_brackets_from_filenames - nominal with extension" {
+    file="${BATS_TMPDIR}/ab(c)de.ext"
+    touch "$file"
+
+    run remove_brackets_from_filenames "$file"
+    [ "$status" -eq 0 ]
+    [ -f "$BATS_TMPDIR/abde" ]
+    [ ! -f "$file" ]
+}
+
+@test "remove_brackets_from_filenames - nominal 2 removals" {
+    file="${BATS_TMPDIR}/ab(c)d[e]"
+    touch "$file"
+
+    run remove_brackets_from_filenames "$file"
+    [ "$status" -eq 0 ]
+    [ -f "$BATS_TMPDIR/abd" ]
+    [ ! -f "$file" ]
+}
+
+@test "remove_brackets_from_filenames - nominal nothing to remove" {
+    file="${BATS_TMPDIR}/abcde"
+    touch "$file"
+
+    run remove_brackets_from_filenames "$file"
+    [ "$status" -eq 0 ]
+    [ -f "$file" ]
+}
+
+@test "remove_brackets_from_filenames - nominal real case" {
+    file="${BATS_TMPDIR}/artist (ft. enculos) - title [audio version].mp3"
+    touch "$file"
+
+    run remove_brackets_from_filenames "$file"
+    [ "$status" -eq 0 ]
+    [ -f "$BATS_TMPDIR/artist  - title .mp3" ]
+    [ ! -f "$file" ]
 }
