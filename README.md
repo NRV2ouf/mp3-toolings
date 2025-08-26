@@ -15,6 +15,6 @@ A set of functions designed to:
     - `sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && sudo chmod a+rx /usr/local/bin/yt-dlp`
 - [id3v2](https://github.com/myers/id3v2) to set metadata of mp3 files
     - `sudo apt install id3v2`
-- (Optionnal) [bats]()
+- (Optionnal) [bats](https://github.com/bats-core/bats-core)
     - `sudo apt install bats`
     - For testing purposes only
