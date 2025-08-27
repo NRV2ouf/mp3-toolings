@@ -160,3 +160,30 @@ teardown() {
     [ -f "$BATS_TMPDIR/artist  - title .mp3" ]
     [ ! -f "$file" ]
 }
+
+@test "remove_brackets_from_filenames - nominal 2 files" {
+    file1="${BATS_TMPDIR}/ab(c)d[e]"
+    file2="${BATS_TMPDIR}/xyz{123}foo"
+    touch "$file1" "$file2"
+
+    run remove_brackets_from_filenames "$file1" "$file2"
+    [ "$status" -eq 0 ]
+    [ -f "$BATS_TMPDIR/abd" ]
+    [ ! -f "$file1" ]
+    [ -f "$BATS_TMPDIR/xyzfoo" ]
+    [ ! -f "$file2" ]
+}
+
+@test "remove_brackets_from_filenames - nominal idempotence" {
+    file="${BATS_TMPDIR}/ab(c)d[e]"
+    touch "$file"
+
+    run remove_brackets_from_filenames "$file"
+    [ "$status" -eq 0 ]
+    [ -f "$BATS_TMPDIR/abd" ]
+    [ ! -f "$file" ]
+
+    run remove_brackets_from_filenames "$BATS_TMPDIR/abd"
+    [ "$status" -eq 0 ]
+    [ -f "$BATS_TMPDIR/abd" ]
+}

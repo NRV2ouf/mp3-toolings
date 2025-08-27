@@ -1,6 +1,9 @@
 #!/bin/bash
 
-set_mp3_metadata(){
+RED='\033[0;31m'
+NC='\033[0m'
+
+_single_file_set_artist_and_title(){
 
     if [ $# -ne 1 ] ; then
         echo "invalid number of arguments...
@@ -10,35 +13,42 @@ set_mp3_metadata(){
 
     local input="$1"
     local file="${input//\\}"    # remove backslashes
-    local filename="${file##*/}"
-    local name="${filename%.*}"
-    local ext="${filename##*.}"
+    local base=$(basename -- "$file")
+    local name="${base%.*}"
+    local ext="${base##*.}"
 
-    if [ "$ext" != "mp3" ]; then
-        echo "$file is not a mp3 ; skipping...">&2
+    if [ ! -f "$1" ] || [ "${ext}" != "mp3" ] ; then
+        # not a mp3 file
         return 2
     fi
-
+    
     dash_counter=$(echo "$name" | tr -cd '-' | wc -c)
     if [ $dash_counter -ne 1 ] ; then
-        echo "$filename doesn't have a single '-' ; skipping...">&2
+        # doesn't have a single '-'
         return 3
     fi
 
     title=${name##*- }
     if [ ${#title} -eq ${#name} ] ; then
-        echo "failed to find the title in a pattern \"artist - title\" ; skipping...">&2
+        # failed to find the title in a pattern \"artist - title\"
         return 4
     fi
     artist=${name% -*}
     if [ ${#artist} -eq ${#name} ] ; then
-        echo "failed to find the artist in a pattern \"artist - title\" ; skipping...">&2
+        # failed to find the artist in a pattern \"artist - title\"
         return 5
     fi
     
     id3v2 --song "$title" "$file"
     id3v2 --artist "$artist" "$file"
     
-    echo "Metadata set for $file"
     return 0
+}
+
+set_artist_and_title() {
+    for file in "$@"; do
+        if ! $(_single_file_set_artist_and_title "$file") ; then
+            echo -e "Failed to set metadata for ${RED}$file${NC}" >&2
+        fi
+    done
 }
