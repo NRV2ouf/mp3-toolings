@@ -1,6 +1,14 @@
 #!/bin/bash
 
-# Require Bash 4+ for associative arrays
+# @name PairRemover
+# @brief A set of function meant to remove paired delimiters (brackets, parentheses, etc.) and their contents from filenames.
+# @description This script defines a function `remove_brackets_from_filenames`
+#  that takes one or more file or directory paths as arguments. It scans each
+#  filename for known paired delimiters (like (), [], {}, etc.) and removes
+#  these delimiters along with any text enclosed within.
+#  
+#  Bash 4+ is required for associative arrays.
+
 if [[ -z ${BASH_VERSINFO+x} || ${BASH_VERSINFO[0]} -lt 4 ]]; then
   echo "brackets.sh: needs Bash 4+ (associative arrays)" >&2
   return 1 2>/dev/null || exit 1
@@ -9,7 +17,14 @@ fi
 # Tip: ensure UTF-8 locale so Unicode characters behave
 export LC_ALL=${LC_ALL:-C.UTF-8}
 
-# Opening → Closing
+# @name _BRACKETS
+# @description An associative array mapping opening brackets to their corresponding closing brackets.
+# @details This array includes a variety of bracket types, including ASCII brackets,
+#   mathematical brackets, CJK corner brackets, angle/guillemet styles, fullwidth forms,
+#   and small forms (compatibility).
+# @example
+#   echo "${_BRACKETS["("]}"  # Outputs: )
+#   echo "${_BRACKETS["「"]}"  # Outputs: 」
 declare -A _BRACKETS=(
   # ASCII
   ["("]=")"
@@ -55,6 +70,10 @@ declare -A _BRACKETS=(
   ["﹝"]="﹞"
 )
 
+# @name _escape_for_sed
+# @description Escapes special characters for use in sed patterns.
+# @arg $1 String The character to escape.
+# @stdout The escaped character if it is special, otherwise the character itself.
 _escape_for_sed() {
   local char="$1"
   local specials=( '.' '^' '$' '*' '+' '?' '(' ')' '[' ']' '{' '}' '\' '|' '-' )  
@@ -69,6 +88,16 @@ _escape_for_sed() {
   printf '%s' "$char"
 }
 
+# @name _remove_innermost_pair
+# @description Removes the innermost occurrences of the specified left and
+#   right delimiters from the input string.
+# @arg $1 String The input string to process.
+# @arg $2 String The left delimiter character.
+# @arg $3 String The right delimiter character.
+# @stdout The processed string with the innermost specified bracket pairs removed.
+# @example
+#   _remove_innermost_pair "example (test (nested)) demo" "(" ")"
+#   -> "example (nested) demo"
 _remove_innermost_pair() {
   local str="$1"
   local left="$2"
@@ -79,6 +108,17 @@ _remove_innermost_pair() {
   echo "$str" | sed -E "s/${left_esc}[^${right}${left}]*${right_esc}//g"
 }
 
+# @name _remove_pair
+# @description Removes all occurrences of the pairs of the specified left and 
+#   right delimiters from the input string. It repeatedly applies the removal
+#   until no more pairs can be found.
+# @arg $1 String The input string to process.
+# @arg $2 String The left delimiter character.
+# @arg $3 String The right delimiter character.
+# @stdout The processed string with all specified bracket pairs removed.
+# @example
+#   _remove_pair "example (test (nested)) demo" "(" ")"
+#   -> "example  demo"
 _remove_pair(){
   local str="$1"
   local left_delim="$2"
@@ -94,6 +134,14 @@ _remove_pair(){
   echo "$new_state"
 }
 
+# @name _remove_pairs
+# @description Removes all pairs of brackets defined in the associative array 
+#   `_BRACKETS` from the input string.
+# @arg $1 String The input string to process.
+# @stdout The processed string with all bracket pairs removed.
+# @example
+#   _remove_pairs "example (test) [demo] {sample}"
+#   -> "example   "
 _remove_pairs(){
   local parsed_str="$1"  
   for l in "${!_BRACKETS[@]}"; do
@@ -103,6 +151,13 @@ _remove_pairs(){
   echo "$parsed_str"
 }
 
+# @name remove_brackets_from_filenames
+# @description For each provided path, the function looks up a list of known 
+#   bracket types (defined in the associative array `_BRACKETS`) and removes
+#   all occurrences of these brackets and any text enclosed within them from.
+# @arg $@ Files One or more paths to scan. Each argument should be a directory or file.
+# @example
+#   remove_brackets_from_filenames file1.mp3 "dir/file2 (live).mp3"
 remove_brackets_from_filenames() {
   for file in "$@"; do
     local dir=$(dirname -- "$file")
