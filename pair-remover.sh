@@ -175,7 +175,7 @@ remove_brackets_from_filenames() {
     name="${base%.*}" # File name without extension
     new_name=$(_remove_pairs "$name")
     new_base="${new_name}${ext}"
-    if [ "${base}" == "${new_base}" ]; then
+    if [ "$base" == "$new_base" ]; then
       continue
     fi
     mv -- "$file" "$dir/$new_base"

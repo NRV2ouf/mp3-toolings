@@ -43,7 +43,7 @@ _single_file_set_artist_and_title(){
     name="${base%.*}"
     ext="${base##*.}"
 
-    if [ ! -f "$1" ] || [ "${ext}" != "mp3" ] ; then
+    if [ ! -f "$1" ] || [ "$ext" != "mp3" ] ; then
         # not a mp3 file
         return 2
     fi

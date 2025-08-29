@@ -6,12 +6,12 @@ load '../mp3-metadata.sh'
 
 @test "_single_file_set_artist_and_title - nominal" {
     file="${BATS_TMPDIR}/Artist - Title.mp3"
-    touch "${file}"
-    run _single_file_set_artist_and_title "${file}"
+    touch "$file"
+    run _single_file_set_artist_and_title "$file"
     [ "$status" -eq 0 ]
 
-    title=$(id3v2 -R "${file}" | awk -F': ' '/^TIT2/{print $2}')
-    artist=$(id3v2 -R "${file}" | awk -F': ' '/^TPE1/{print $2}')
+    title=$(id3v2 -R "$file" | awk -F': ' '/^TIT2/{print $2}')
+    artist=$(id3v2 -R "$file" | awk -F': ' '/^TPE1/{print $2}')
     [[ "$title" == "Title" ]]
     [[ "$artist" == "Artist" ]]
 }
@@ -23,56 +23,56 @@ load '../mp3-metadata.sh'
 
 @test "_single_file_set_artist_and_title - error not a mp3" {
     file="${BATS_TMPDIR}/Artist - Title.wav"
-    touch "${file}"
-    run _single_file_set_artist_and_title "${file}"
+    touch "$file"
+    run _single_file_set_artist_and_title "$file"
     [ "$status" -eq 2 ]
 }
 
 @test "_single_file_set_artist_and_title - error file doesn't exist" {
     file="${BATS_TMPDIR}/nonexistent.mp3"
-    run _single_file_set_artist_and_title "${file}"
+    run _single_file_set_artist_and_title "$file"
     [ "$status" -eq 2 ]
 }
 
 @test "_single_file_set_artist_and_title - error no dash" {
     file="${BATS_TMPDIR}/Artist Title.mp3"
-    touch "${file}"
-    run _single_file_set_artist_and_title "${file}"
+    touch "$file"
+    run _single_file_set_artist_and_title "$file"
     [ "$status" -eq 3 ]
 }
 
 @test "_single_file_set_artist_and_title - error multiple dashes" {
     file="${BATS_TMPDIR}/Artist - Title - Extra.mp3"
-    touch "${file}"
-    run _single_file_set_artist_and_title "${file}"
+    touch "$file"
+    run _single_file_set_artist_and_title "$file"
     [ "$status" -eq 3 ]
 }
 
 @test "_single_file_set_artist_and_title - error no title" {
     file="${BATS_TMPDIR}/Artist -.mp3"
-    touch "${file}"
-    run _single_file_set_artist_and_title "${file}"
+    touch "$file"
+    run _single_file_set_artist_and_title "$file"
     [ "$status" -eq 4 ]
 }
 
 @test "_single_file_set_artist_and_title - error title lacking a space" {
     file="${BATS_TMPDIR}/Artist -Title.mp3"
-    touch "${file}"
-    run _single_file_set_artist_and_title "${file}"
+    touch "$file"
+    run _single_file_set_artist_and_title "$file"
     [ "$status" -eq 4 ]
 }
 
 @test "_single_file_set_artist_and_title - error no artist" {
     file="${BATS_TMPDIR}/- Title.mp3"
-    touch "${file}"
-    run _single_file_set_artist_and_title "${file}"
+    touch "$file"
+    run _single_file_set_artist_and_title "$file"
     [ "$status" -eq 5 ]
 }
 
 @test "_single_file_set_artist_and_title - error artist lacking a space" {
     file="${BATS_TMPDIR}/Artist- Title.mp3"
-    touch "${file}"
-    run _single_file_set_artist_and_title "${file}"
+    touch "$file"
+    run _single_file_set_artist_and_title "$file"
     [ "$status" -eq 5 ]
 }
 
@@ -86,8 +86,8 @@ load '../mp3-metadata.sh'
     run set_artist_and_title "$file"
     [ "$status" -eq 0 ]
 
-    title=$(id3v2 -R "${file}" | awk -F': ' '/^TIT2/{print $2}')
-    artist=$(id3v2 -R "${file}" | awk -F': ' '/^TPE1/{print $2}')
+    title=$(id3v2 -R "$file" | awk -F': ' '/^TIT2/{print $2}')
+    artist=$(id3v2 -R "$file" | awk -F': ' '/^TPE1/{print $2}')
     [[ "$title" == "Title" ]]
     [[ "$artist" == "Artist" ]]
 }
@@ -137,16 +137,16 @@ load '../mp3-metadata.sh'
     run set_artist_and_title "$file"
     [ "$status" -eq 0 ]
 
-    title=$(id3v2 -R "${file}" | awk -F': ' '/^TIT2/{print $2}')
-    artist=$(id3v2 -R "${file}" | awk -F': ' '/^TPE1/{print $2}')
+    title=$(id3v2 -R "$file" | awk -F': ' '/^TIT2/{print $2}')
+    artist=$(id3v2 -R "$file" | awk -F': ' '/^TPE1/{print $2}')
     [[ "$title" == "Title" ]]
     [[ "$artist" == "Artist" ]]
 
     run set_artist_and_title "$file"
     [ "$status" -eq 0 ]
 
-    title=$(id3v2 -R "${file}" | awk -F': ' '/^TIT2/{print $2}')
-    artist=$(id3v2 -R "${file}" | awk -F': ' '/^TPE1/{print $2}')
+    title=$(id3v2 -R "$file" | awk -F': ' '/^TIT2/{print $2}')
+    artist=$(id3v2 -R "$file" | awk -F': ' '/^TPE1/{print $2}')
     [[ "$title" == "Title" ]]
     [[ "$artist" == "Artist" ]]
 }
