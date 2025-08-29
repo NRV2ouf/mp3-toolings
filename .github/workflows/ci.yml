@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:bullseye-slim
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y bats id3v2
+
+      - name: Run Bats tests
+        run: |
+          bats tests/
+
+  docs:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:bullseye-slim
+
+    permissions:
+      contents: write 
+
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install shdoc
+        run: |
+          apt-get update
+          apt-get install -y curl git gawk
+
+      - name: Install shdoc
+        run: |
+          curl -L https://raw.githubusercontent.com/reconquest/shdoc/master/shdoc \
+            -o /usr/local/bin/shdoc
+          chmod +x /usr/local/bin/shdoc
+
+      - name: Generate docs
+        run: |
+          scripts=$(ls *.sh)
+          for script in $scripts; do
+            shdoc < "./$script" > ${script%.sh}.md
+          done
+
+      - name: Push to Wiki
+        run: |
+          git config --global user.email "ci-bot@example.com"
+          git config --global user.name "CI Bot"
+
+          # Clone the wiki repo
+          git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git" wiki
+
+          # Clear existing docs
+          rm -rf wiki/*
+
+          # Copy the generated doc
+          cp *.md wiki/
+          cd wiki
+
+          # Rename README.md to Home.md if it exists
+          mv README.md Home.md || true
+
+          # Commit and push changes
+          git add .
+          if git commit -m "[skip ci] docs: Update docs from CI"; then
+            git push
+          else
+            echo "No changes in docs."
+          fi
