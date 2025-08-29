@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # @name PairRemover
 # @brief A set of function meant to remove paired delimiters (brackets, parentheses, etc.) and their contents from filenames.
 # @description This script defines a function `remove_brackets_from_filenames`

@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # @name Mp3Metadata
 # @brief A set of functions to set some MP3 metadata based on the filename based 
 # on pattern different patterns.

@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # @name Download
 # @brief A set of functions to download mp3 or mp4 from a url using yt-dlp.
 # @description This script defines two functions `download_mp3` and `download_mp4`
