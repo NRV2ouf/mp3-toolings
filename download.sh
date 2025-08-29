@@ -9,7 +9,7 @@
 
 if ! command -v yt-dlp &> /dev/null; then
     echo "yt-dlp could not be found, please install it." >&2
-    return 1 2>/dev/null || exit 1
+    exit 1
 fi
 
 # @name download_mp3

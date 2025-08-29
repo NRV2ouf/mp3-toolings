@@ -9,7 +9,7 @@
 
 if [[ -z ${BASH_VERSINFO+x} || ${BASH_VERSINFO[0]} -lt 4 ]]; then
   echo "brackets.sh: needs Bash 4+ (associative arrays)" >&2
-  return 1 2>/dev/null || exit 1
+  exit 1
 fi
 
 # Tip: ensure UTF-8 locale so Unicode characters behave
@@ -73,17 +73,17 @@ declare -A _BRACKETS=(
 # @arg $1 String The character to escape.
 # @stdout The escaped character if it is special, otherwise the character itself.
 _escape_for_sed() {
-  local char="$1"
-  local specials=( '.' '^' '$' '*' '+' '?' '(' ')' '[' ']' '{' '}' '\' '|' '-' )  
+  # shellcheck disable=SC1003
+  local specials=( '.' '^' '$' '*' '+' '?' '(' ')' '[' ']' '{' '}' '\' '|' '-' ) 
   for s in "${specials[@]}"; do
-    if [[ "$char" == "$s" ]]; then
-      printf '\\%s' "$char"
+    if [[ "$1" == "$s" ]]; then
+      printf '\\%s' "$1"
       return
     fi
   done
 
   # Not a special char, print as is
-  printf '%s' "$char"
+  printf '%s' "$1"
 }
 
 # @name _remove_innermost_pair
@@ -122,8 +122,9 @@ _remove_pair(){
   local left_delim="$2"
   local right_delim="$3"
 
-  local last_state="$str"
-  local new_state=$(_remove_innermost_pair "$last_state" "$left_delim" "$right_delim")
+  local last_state new_state
+  last_state="$str"
+  new_state=$(_remove_innermost_pair "$last_state" "$left_delim" "$right_delim")
   while [ "$last_state" != "$new_state" ] ; do
     last_state="$new_state"
     new_state=$(_remove_innermost_pair "$last_state" "$left_delim" "$right_delim")
@@ -158,15 +159,22 @@ _remove_pairs(){
 #   remove_brackets_from_filenames file1.mp3 "dir/file2 (live).mp3"
 remove_brackets_from_filenames() {
   for file in "$@"; do
-    local dir=$(dirname -- "$file")
-    local base=$(basename -- "$file")
-    local ext=".${base##*.}"
+    local dir
+    local base
+    local ext
+    local name
+    local new_name
+    local new_base
+    
+    dir=$(dirname -- "$file")
+    base=$(basename -- "$file")
+    ext=".${base##*.}"
     if [ "$ext" == ".$base" ]; then
       ext=""
     fi
-    local name="${base%.*}" # File name without extension
-    local new_name=$(_remove_pairs "$name")
-    local new_base="${new_name}${ext}"
+    name="${base%.*}" # File name without extension
+    new_name=$(_remove_pairs "$name")
+    new_base="${new_name}${ext}"
     if [ "${base}" == "${new_base}" ]; then
       continue
     fi

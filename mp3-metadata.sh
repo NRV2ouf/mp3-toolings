@@ -33,11 +33,15 @@ _single_file_set_artist_and_title(){
         return 1
     fi
 
-    local input="$1"
-    local file="${input//\\}"    # remove backslashes
-    local base=$(basename -- "$file")
-    local name="${base%.*}"
-    local ext="${base##*.}"
+    local file
+    local base
+    local name
+    local ext
+    
+    file="${1//\\}"    # remove backslashes
+    base=$(basename -- "$file")
+    name="${base%.*}"
+    ext="${base##*.}"
 
     if [ ! -f "$1" ] || [ "${ext}" != "mp3" ] ; then
         # not a mp3 file
@@ -45,7 +49,7 @@ _single_file_set_artist_and_title(){
     fi
     
     dash_counter=$(echo "$name" | tr -cd '-' | wc -c)
-    if [ $dash_counter -ne 1 ] ; then
+    if [ "$dash_counter" -ne 1 ] ; then
         # doesn't have a single '-'
         return 3
     fi
@@ -79,7 +83,7 @@ _single_file_set_artist_and_title(){
 #   set_artist_and_title "path/to/artist1 - title1.mp3" "path/to/artist2 - title2.mp3"
 set_artist_and_title() {
     for file in "$@"; do
-        if ! $(_single_file_set_artist_and_title "$file") ; then
+        if ! _single_file_set_artist_and_title "$file" ; then
             echo -e "Failed to set metadata for ${RED}$file${NC}" >&2
         fi
     done
