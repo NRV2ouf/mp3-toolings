@@ -1,4 +1,4 @@
-# @name PairRemover
+# @name Pair Remover
 # @brief A set of function meant to remove paired delimiters (brackets, parentheses, etc.) and their contents from filenames.
 # @description This script defines a function `remove_brackets_from_filenames`
 #  that takes one or more file or directory paths as arguments. It scans each
@@ -15,7 +15,6 @@ fi
 # Tip: ensure UTF-8 locale so Unicode characters behave
 export LC_ALL=${LC_ALL:-C.UTF-8}
 
-# @name _BRACKETS
 # @description An associative array mapping opening brackets to their corresponding closing brackets.
 # @details This array includes a variety of bracket types, including ASCII brackets,
 #   mathematical brackets, CJK corner brackets, angle/guillemet styles, fullwidth forms,
@@ -68,7 +67,6 @@ declare -A _BRACKETS=(
   ["﹝"]="﹞"
 )
 
-# @name _escape_for_sed
 # @description Escapes special characters for use in sed patterns.
 # @arg $1 String The character to escape.
 # @stdout The escaped character if it is special, otherwise the character itself.
@@ -86,7 +84,6 @@ _escape_for_sed() {
   printf '%s' "$1"
 }
 
-# @name _remove_innermost_pair
 # @description Removes the innermost occurrences of the specified left and
 #   right delimiters from the input string.
 # @arg $1 String The input string to process.
@@ -106,7 +103,6 @@ _remove_innermost_pair() {
   echo "$str" | sed -E "s/${left_esc}[^${right}${left}]*${right_esc}//g"
 }
 
-# @name _remove_pair
 # @description Removes all occurrences of the pairs of the specified left and 
 #   right delimiters from the input string. It repeatedly applies the removal
 #   until no more pairs can be found.
@@ -133,7 +129,6 @@ _remove_pair(){
   echo "$new_state"
 }
 
-# @name _remove_pairs
 # @description Removes all pairs of brackets defined in the associative array 
 #   `_BRACKETS` from the input string.
 # @arg $1 String The input string to process.
@@ -150,7 +145,6 @@ _remove_pairs(){
   echo "$parsed_str"
 }
 
-# @name remove_brackets_from_filenames
 # @description For each provided path, the function looks up a list of known 
 #   bracket types (defined in the associative array `_BRACKETS`) and removes
 #   all occurrences of these brackets and any text enclosed within them from.

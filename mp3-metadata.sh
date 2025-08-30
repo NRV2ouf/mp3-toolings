@@ -1,4 +1,4 @@
-# @name Mp3Metadata
+# @name Mp3 Metadata
 # @brief A set of functions to set some MP3 metadata based on the filename based 
 # on pattern different patterns.
 # @description This script defines a function `set_artist_and_title`
@@ -10,7 +10,6 @@
 RED='\033[0;31m'
 NC='\033[0m'
 
-# @name _single_file_set_artist_and_title
 # @description A helper function that sets the artist and title metadata for a 
 #   single mp3 file based on the filename pattern "artist - title".
 # @details This function extracts the artist and title from the filename by 
@@ -71,7 +70,6 @@ _single_file_set_artist_and_title(){
     return 0
 }
 
-# @name set_artist_and_title
 # @description Sets the artist and title metadata for each provided mp3 file
 #   based on the filename pattern "artist - title".
 # @details This function iterates over each provided file path and calls the
@@ -89,7 +87,6 @@ set_artist_and_title() {
     done
 }
 
-# @name _single_file_set_album
 # @description A helper function that sets the album metadata for a single mp3
 #   file based on its parent directory name.
 # @details This function extracts the album name from the parent directory of
@@ -119,7 +116,6 @@ _single_file_set_album() {
     id3v2 --album "$album" "$1"
 }
 
-# @name set_album
 # @description Sets the album metadata for each provided mp3 file based on its
 #   parent directory name.
 # @details This function iterates over each provided file path and calls the

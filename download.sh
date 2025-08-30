@@ -12,7 +12,6 @@ if ! command -v yt-dlp &> /dev/null; then
     exit 1
 fi
 
-# @name download_mp3
 # @description Downloads audio from the provided URL and saves it as mp3 files.
 # @details This function uses yt-dlp to extract audio from the given URL,
 #   convert it to mp3 format, and save it in a temporary folder within ~/Music.
@@ -34,7 +33,6 @@ download_mp3(){
     echo -e "\e[34mDownloaded to $tmp_folder\e[0m"
 }
 
-# @name download_mp4
 # @description Downloads video from the provided URL and saves it as mp4 files.
 # @details This function uses yt-dlp to download the best quality video and audio
 #   from the given URL, merges them into mp4 format, and saves them in a temporary
