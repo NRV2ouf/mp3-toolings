@@ -88,3 +88,51 @@ set_artist_and_title() {
         fi
     done
 }
+
+# @name _single_file_set_album
+# @description A helper function that sets the album metadata for a single mp3
+#   file based on its parent directory name.
+# @details This function extracts the album name from the parent directory of
+#  the mp3 file. If the file is in the current directory, it uses the current
+#  directory name as the album name. It then uses the `id3v2` command to set
+#  the album ID3v2 tag in the mp3 file.
+# @arg $1 filepath The path to the mp3 file.
+# @exitcode 0 if the album was successfully set,
+# @exitcode 1 if the file is not a valid mp3 file.
+# @example
+#   _single_file_set_album "path/to/AlbumName/artist - title.mp3
+_single_file_set_album() {
+    if [ ! -f "$1" ] || [ "${1##*.}" != "mp3" ] ; then
+        # not a mp3 file
+        return 1
+    fi
+
+    local path
+    path=$(dirname -- "$1")
+    dirname=$(basename -- "$path")
+
+    if [ "$dirname" == "." ] ; then
+        dirname=${PWD##*/}
+    fi
+
+    album="${dirname//\\}"    # remove backslashes
+    id3v2 --album "$album" "$1"
+}
+
+# @name set_album
+# @description Sets the album metadata for each provided mp3 file based on its
+#   parent directory name.
+# @details This function iterates over each provided file path and calls the
+#   helper function `_single_file_set_album` to set the album metadata. If the
+#   album setting fails for any file, it prints an error message to standard
+#   error.
+# @arg $@ files One or more paths to mp3 files.
+# @example
+#   set_album "path/to/AlbumName/*.mp3"
+set_album() {
+    for file in "$@"; do
+        if ! _single_file_set_album "$file" ; then
+            echo -e "Failed to set album for ${RED}$file${NC}" >&2
+        fi
+    done
+}
