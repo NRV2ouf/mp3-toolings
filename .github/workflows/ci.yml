@@ -60,7 +60,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install shdoc
+      - name: Install shdoc dependencies
         run: |
           apt-get update
           apt-get install -y curl git gawk
