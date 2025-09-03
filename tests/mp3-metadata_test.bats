@@ -13,7 +13,7 @@ teardown() {
     file="${BATS_TMPDIR}/Artist - Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 0 ]
+    [[ "$status" -eq 0 ]]
 
     title=$(id3v2 -R "$file" | awk -F': ' '/^TIT2/{print $2}')
     artist=$(id3v2 -R "$file" | awk -F': ' '/^TPE1/{print $2}')
@@ -23,34 +23,34 @@ teardown() {
 
 @test "_single_file_set_artist_and_title - error on missing argument" {
     run _single_file_set_artist_and_title
-    [ "$status" -eq 1 ]
+    [[ "$status" -eq 1 ]]
 }
 
 @test "_single_file_set_artist_and_title - error not a mp3" {
     file="${BATS_TMPDIR}/Artist - Title.wav"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 2 ]
+    [[ "$status" -eq 2 ]]
 }
 
 @test "_single_file_set_artist_and_title - error file doesn't exist" {
     file="${BATS_TMPDIR}/nonexistent.mp3"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 2 ]
+    [[ "$status" -eq 2 ]]
 }
 
 @test "_single_file_set_artist_and_title - error no dash" {
     file="${BATS_TMPDIR}/Artist Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 3 ]
+    [[ "$status" -eq 3 ]]
 }
 
 @test "_single_file_set_artist_and_title - error multiple dashes" {
     file="${BATS_TMPDIR}/Artist - Title - Extra.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 3 ]
+    [[ "$status" -eq 3 ]]
 }
 
 @test "_single_file_set_artist_and_title - error no title" {
@@ -58,28 +58,28 @@ teardown() {
     touch "$file"
     run _single_file_set_artist_and_title "$file"
     echo "$status"
-    [ "$status" -eq 3 ]
+    [[ "$status" -eq 3 ]]
 }
 
 @test "_single_file_set_artist_and_title - error title lacking a space" {
     file="${BATS_TMPDIR}/Artist -Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 3 ]
+    [[ "$status" -eq 3 ]]
 }
 
 @test "_single_file_set_artist_and_title - error no artist" {
     file="${BATS_TMPDIR}/- Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 3 ]
+    [[ "$status" -eq 3 ]]
 }
 
 @test "_single_file_set_artist_and_title - error artist lacking a space" {
     file="${BATS_TMPDIR}/Artist- Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 3 ]
+    [[ "$status" -eq 3 ]]
 }
 
 # set_artist_and_title
@@ -89,7 +89,7 @@ teardown() {
     touch "$file"
 
     run set_artist_and_title "$file"
-    [ "$status" -eq 0 ]
+    [[ "$status" -eq 0 ]]
 
     title=$(id3v2 -R "$file" | awk -F': ' '/^TIT2/{print $2}')
     artist=$(id3v2 -R "$file" | awk -F': ' '/^TPE1/{print $2}')
@@ -103,7 +103,7 @@ teardown() {
     touch "$file1" "$file2"
 
     run set_artist_and_title "$file1" "$file2"
-    [ "$status" -eq 0 ]
+    [[ "$status" -eq 0 ]]
 
     title1=$(id3v2 -R "${file1}" | awk -F': ' '/^TIT2/{print $2}')
     artist1=$(id3v2 -R "${file1}" | awk -F': ' '/^TPE1/{print $2}')
@@ -123,9 +123,9 @@ teardown() {
 
     run set_artist_and_title "$file1" "$file2"
     [[ "$output" =~ "Failed" && "$output" =~ "$file1" ]]
-    [ "$status" -eq 0 ]
-    [ -f "$file1" ]
-    [ -f "$file2" ]
+    [[ "$status" -eq 0 ]]
+    [[ -f "$file1" ]]
+    [[ -f "$file2" ]]
 
     title2=$(id3v2 -R "${file2}" | awk -F': ' '/^TIT2/{print $2}')
     artist2=$(id3v2 -R "${file2}" | awk -F': ' '/^TPE1/{print $2}')
@@ -138,7 +138,7 @@ teardown() {
     touch "$file"
 
     run set_artist_and_title "$file"
-    [ "$status" -eq 0 ]
+    [[ "$status" -eq 0 ]]
 
     title=$(id3v2 -R "$file" | awk -F': ' '/^TIT2/{print $2}')
     artist=$(id3v2 -R "$file" | awk -F': ' '/^TPE1/{print $2}')
@@ -146,7 +146,7 @@ teardown() {
     [[ "$artist" == "Artist" ]]
 
     run set_artist_and_title "$file"
-    [ "$status" -eq 0 ]
+    [[ "$status" -eq 0 ]]
 
     title=$(id3v2 -R "$file" | awk -F': ' '/^TIT2/{print $2}')
     artist=$(id3v2 -R "$file" | awk -F': ' '/^TPE1/{print $2}')
@@ -156,13 +156,13 @@ teardown() {
 
 @test "set_artist_and_title - no files specified" {
     run set_artist_and_title
-    [ "$status" -eq 0 ]
+    [[ "$status" -eq 0 ]]
 }
 
 @test "set_artist_and_title - file doesn't exist" {
     file="${BATS_TMPDIR}/nonexistent.mp3"
     run set_artist_and_title "$file"
-    [ "$status" -eq 0 ]
+    [[ "$status" -eq 0 ]]
 }
 
 # _single_file_set_album
@@ -175,8 +175,8 @@ teardown() {
     touch "$file"
 
     run _single_file_set_album "$file"
-    [ "$status" -eq 0 ]
-    [ -f "$file" ]
+    [[ "$status" -eq 0 ]]
+    [[ -f "$file" ]]
 
     set_album=$(id3v2 -R "$file" | awk -F': ' '/^TALB/{print $2}')
     [[ "$set_album" == "$album" ]]
@@ -193,8 +193,8 @@ teardown() {
     cd "${BATS_TMPDIR}/${album}"
 
     run _single_file_set_album "$filename"
-    [ "$status" -eq 0 ]
-    [ -f "$file" ]
+    [[ "$status" -eq 0 ]]
+    [[ -f "$file" ]]
 
     set_album=$(id3v2 -R "$file" | awk -F': ' '/^TALB/{print $2}')
     [[ "$set_album" == "$album" ]]
@@ -208,8 +208,8 @@ teardown() {
     touch "$file"
 
     run _single_file_set_album "$file"
-    [ "$status" -eq 0 ]
-    [ -f "$file" ]
+    [[ "$status" -eq 0 ]]
+    [[ -f "$file" ]]
 
     set_album=$(id3v2 -R "$file" | awk -F': ' '/^TALB/{print $2}')
     [[ "$set_album" == "$album" ]]
@@ -217,7 +217,7 @@ teardown() {
 
 @test "_single_file_set_album - error on missing argument" {
     run _single_file_set_album
-    [ "$status" -eq 1 ]
+    [[ "$status" -eq 1 ]]
 }
 
 @test "_single_file_set_album - error not a mp3" {
@@ -225,13 +225,13 @@ teardown() {
     mkdir -p "${BATS_TMPDIR}/AlbumName"
     touch "$file"
     run _single_file_set_album "$file"
-    [ "$status" -eq 1 ]
+    [[ "$status" -eq 1 ]]
 }
 
 @test "_single_file_set_album - error file doesn't exist" {
     file="${BATS_TMPDIR}/AlbumName/nonexistent.mp3"
     run _single_file_set_album "$file"
-    [ "$status" -eq 1 ]
+    [[ "$status" -eq 1 ]]
 }
 
 @test "set_album - nominal" {
@@ -242,8 +242,8 @@ teardown() {
     touch "$file"
 
     run set_album "$file"
-    [ "$status" -eq 0 ]
-    [ -f "$file" ]
+    [[ "$status" -eq 0 ]]
+    [[ -f "$file" ]]
 
     set_album=$(id3v2 -R "$file" | awk -F': ' '/^TALB/{print $2}')
     [[ "$set_album" == "$album" ]]
@@ -251,7 +251,7 @@ teardown() {
 
 @test "set_album - nominal no files specified" {
     run set_album
-    [ "$status" -eq 0 ]
+    [[ "$status" -eq 0 ]]
 }
 
 @test "set_album - nominal two files" {
@@ -265,9 +265,9 @@ teardown() {
     touch "$file1" "$file2"
 
     run set_album "$file1" "$file2"
-    [ "$status" -eq 0 ]
-    [ -f "$file1" ]
-    [ -f "$file2" ]
+    [[ "$status" -eq 0 ]]
+    [[ -f "$file1" ]]
+    [[ -f "$file2" ]]
 
     set_album1=$(id3v2 -R "$file1" | awk -F': ' '/^TALB/{print $2}')
     [[ "$set_album1" == "$album1" ]]

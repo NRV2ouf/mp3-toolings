@@ -24,7 +24,7 @@ NC='\033[0m'
 #   _single_file_set_artist_and_title "path/to/artist - title.mp3"
 _single_file_set_artist_and_title(){
 
-    if [ $# -ne 1 ] ; then
+    if [[ $# -ne 1 ]] ; then
         echo "invalid number of arguments...
             Example of usage: set_mp3_metadata \"path/to/my - music to name.mp3\"">&2
         return 1
@@ -40,7 +40,7 @@ _single_file_set_artist_and_title(){
     name="${base%.*}"
     ext="${base##*.}"
 
-    if [ ! -f "$1" ] || [ "$ext" != "mp3" ] ; then
+    if [[ ! -f "$1" ]] || [[ "$ext" != "mp3" ]] ; then
         # not a mp3 file
         return 2
     fi
@@ -86,7 +86,7 @@ set_artist_and_title() {
 # @example
 #   _single_file_set_album "path/to/AlbumName/artist - title.mp3
 _single_file_set_album() {
-    if [ ! -f "$1" ] || [ "${1##*.}" != "mp3" ] ; then
+    if [[ ! -f "$1" ]] || [[ "${1##*.}" != "mp3" ]] ; then
         # not a mp3 file
         return 1
     fi
@@ -95,7 +95,7 @@ _single_file_set_album() {
     path=$(dirname -- "$1")
     dirname=$(basename -- "$path")
 
-    if [ "$dirname" == "." ] ; then
+    if [[ "$dirname" == "." ]] ; then
         dirname=${PWD##*/}
     fi
 

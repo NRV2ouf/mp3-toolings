@@ -121,7 +121,7 @@ _remove_pair(){
   local last_state new_state
   last_state="$str"
   new_state=$(_remove_innermost_pair "$last_state" "$left_delim" "$right_delim")
-  while [ "$last_state" != "$new_state" ] ; do
+  while [[ "$last_state" != "$new_state" ]] ; do
     last_state="$new_state"
     new_state=$(_remove_innermost_pair "$last_state" "$left_delim" "$right_delim")
   done
@@ -163,13 +163,13 @@ remove_brackets_from_filenames() {
     dir=$(dirname -- "$file")
     base=$(basename -- "$file")
     ext=".${base##*.}"
-    if [ "$ext" == ".$base" ]; then
+    if [[ "$ext" == ".$base" ]]; then
       ext=""
     fi
     name="${base%.*}" # File name without extension
     new_name=$(_remove_pairs "$name")
     new_base="${new_name}${ext}"
-    if [ "$base" == "$new_base" ]; then
+    if [[ "$base" == "$new_base" ]]; then
       continue
     fi
     mv -- "$file" "$dir/$new_base"
