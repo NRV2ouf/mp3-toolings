@@ -1,6 +1,7 @@
 #!/usr/bin/env bats
 
 load '../mp3-metadata.sh'
+load '../utils.sh'
 
 teardown() {
     rm -rf "${BATS_TMPDIR}/*"
@@ -56,28 +57,29 @@ teardown() {
     file="${BATS_TMPDIR}/Artist -.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 4 ]
+    echo "$status"
+    [ "$status" -eq 3 ]
 }
 
 @test "_single_file_set_artist_and_title - error title lacking a space" {
     file="${BATS_TMPDIR}/Artist -Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 4 ]
+    [ "$status" -eq 3 ]
 }
 
 @test "_single_file_set_artist_and_title - error no artist" {
     file="${BATS_TMPDIR}/- Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 5 ]
+    [ "$status" -eq 3 ]
 }
 
 @test "_single_file_set_artist_and_title - error artist lacking a space" {
     file="${BATS_TMPDIR}/Artist- Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
-    [ "$status" -eq 5 ]
+    [ "$status" -eq 3 ]
 }
 
 # set_artist_and_title
@@ -115,22 +117,20 @@ teardown() {
 }
 
 @test "set_artist_and_title - nominal 2 files, one invalid" {
-    file1="${BATS_TMPDIR}/Artist1 - Title1.mp3"
-    file2="${BATS_TMPDIR}/Artist2 Title2.mp3"
+    file1="${BATS_TMPDIR}/Artist1 Title1.mp3"
+    file2="${BATS_TMPDIR}/Artist2 - Title2.mp3"
     touch "$file1" "$file2"
 
     run set_artist_and_title "$file1" "$file2"
+    [[ "$output" =~ "Failed" && "$output" =~ "$file1" ]]
     [ "$status" -eq 0 ]
-
-    title1=$(id3v2 -R "${file1}" | awk -F': ' '/^TIT2/{print $2}')
-    artist1=$(id3v2 -R "${file1}" | awk -F': ' '/^TPE1/{print $2}')
-    [[ "$title1" == "Title1" ]]
-    [[ "$artist1" == "Artist1" ]]
+    [ -f "$file1" ]
+    [ -f "$file2" ]
 
     title2=$(id3v2 -R "${file2}" | awk -F': ' '/^TIT2/{print $2}')
     artist2=$(id3v2 -R "${file2}" | awk -F': ' '/^TPE1/{print $2}')
-    [[ -z "$title2" ]]
-    [[ -z "$artist2" ]]
+    [[ "$title2" == "Title2" ]]
+    [[ "$artist2" == "Artist2" ]]
 }
 
 @test "set_artist_and_title - nominal idempotence" {

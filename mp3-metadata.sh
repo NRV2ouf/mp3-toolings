@@ -19,9 +19,7 @@ NC='\033[0m'
 # @exitcode 0 if the metadata was successfully set,
 # @exitcode 1 if the number of arguments is incorrect,
 # @exitcode 2 if the file is not a valid mp3 file,
-# @exitcode 3 if the filename does not contain exactly one '-',
-# @exitcode 4 if the title could not be extracted,
-# @exitcode 5 if the artist could not be extracted.
+# @exitcode 3 if the filename does not match the expected pattern: "artist - title".,
 # @example
 #   _single_file_set_artist_and_title "path/to/artist - title.mp3"
 _single_file_set_artist_and_title(){
@@ -46,22 +44,11 @@ _single_file_set_artist_and_title(){
         # not a mp3 file
         return 2
     fi
-    
-    dash_counter=$(echo "$name" | tr -cd '-' | wc -c)
-    if [ "$dash_counter" -ne 1 ] ; then
-        # doesn't have a single '-'
-        return 3
-    fi
 
-    title=${name##*- }
-    if [ ${#title} -eq ${#name} ] ; then
-        # failed to find the title in a pattern \"artist - title\"
-        return 4
-    fi
-    artist=${name% -*}
-    if [ ${#artist} -eq ${#name} ] ; then
-        # failed to find the artist in a pattern \"artist - title\"
-        return 5
+    local title
+    local artist
+    if ! title=$(_get_title "$name") || ! artist=$(_get_artist "$name") ; then
+        return 3
     fi
     
     id3v2 --song "$title" "$file"
