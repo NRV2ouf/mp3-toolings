@@ -2,10 +2,6 @@
 
 load '../space-trimmer.sh'
 
-teardown() {
-    rm -f "${BATS_TEST_TMPDIR}/*"
-}
-
 ## _trim_multi_spaces
 
 @test "_trim_multi_spaces - nominal double spaces" {

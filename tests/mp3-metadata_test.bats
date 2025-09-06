@@ -3,10 +3,6 @@
 load '../mp3-metadata.sh'
 load '../utils.sh'
 
-teardown() {
-    rm -rf "${BATS_TEST_TMPDIR}/*"
-}
-
 # _single_file_set_artist_and_title
 
 @test "_single_file_set_artist_and_title - nominal" {

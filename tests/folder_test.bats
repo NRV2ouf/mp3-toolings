@@ -3,10 +3,6 @@
 load '../utils.sh'
 load '../folder.sh'
 
-teardown() {
-    rm -rf "${BATS_TEST_TMPDIR:?}/"*
-}
-
 # _create_and_move_to_folder_from_artist
 
 @test "_create_and_move_to_folder_from_artist - nominal" {

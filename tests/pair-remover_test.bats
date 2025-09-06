@@ -12,7 +12,6 @@ setup() {
 
 teardown() {
     unset _BRACKETS
-    rm -f "${BATS_TEST_TMPDIR}/*"
 }
 
 ## _remove_innermost_pair
