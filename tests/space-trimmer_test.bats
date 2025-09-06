@@ -3,7 +3,7 @@
 load '../space-trimmer.sh'
 
 teardown() {
-    rm -f "${BATS_TMPDIR}/*"
+    rm -f "${BATS_TEST_TMPDIR}/*"
 }
 
 ## _trim_multi_spaces
@@ -67,34 +67,34 @@ teardown() {
 ## trim_spaces_from_filenames
 
 @test "trim_spaces_from_filenames - nominal" {
-    file="${BATS_TMPDIR}/file  name.txt"
+    file="${BATS_TEST_TMPDIR}/file  name.txt"
     touch "$file"    
     run trim_spaces_from_filenames "$file"
     [[ "$status" -eq 0 ]]
-    [[ -f "${BATS_TMPDIR}/file name.txt" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/file name.txt" ]]
     [[ ! -f "$file" ]]
 }
 
 @test "trim_spaces_from_filenames - nominal leading and trailing spaces" {
-    file="${BATS_TMPDIR}/  file name  .txt"
+    file="${BATS_TEST_TMPDIR}/  file name  .txt"
     touch "$file"    
     run trim_spaces_from_filenames "$file"
     [[ "$status" -eq 0 ]]
-    [[ -f "${BATS_TMPDIR}/file name.txt" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/file name.txt" ]]
     [[ ! -f "$file" ]]
 }
 
 @test "trim_spaces_from_filenames - nominal multiple spaces" {
-    file="${BATS_TMPDIR}/file    name.txt"
+    file="${BATS_TEST_TMPDIR}/file    name.txt"
     touch "$file"    
     run trim_spaces_from_filenames "$file"
     [[ "$status" -eq 0 ]]
-    [[ -f "${BATS_TMPDIR}/file name.txt" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/file name.txt" ]]
     [[ ! -f "$file" ]]
 }
 
 @test "trim_spaces_from_filenames - nominal no spaces to trim" {
-    file="${BATS_TMPDIR}/filename.txt"
+    file="${BATS_TEST_TMPDIR}/filename.txt"
     touch "$file"    
     run trim_spaces_from_filenames "$file"
     [[ "$status" -eq 0 ]]
@@ -102,15 +102,15 @@ teardown() {
 }
 
 @test "trim_spaces_from_filenames - nominal multiple files" {
-    file1="${BATS_TMPDIR}/  file  name  .txt"
-    file2="${BATS_TMPDIR}/another    file.txt"
+    file1="${BATS_TEST_TMPDIR}/  file  name  .txt"
+    file2="${BATS_TEST_TMPDIR}/another    file.txt"
     touch "$file1"    
-    touch "$file2"    
+    touch "$file2"
     run trim_spaces_from_filenames "$file1" "$file2"
     [[ "$status" -eq 0 ]]
-    [[ -f "${BATS_TMPDIR}/file name.txt" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/file name.txt" ]]
     [[ ! -f "$file1" ]]
-    [[ -f "${BATS_TMPDIR}/another file.txt" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/another file.txt" ]]
     [[ ! -f "$file2" ]]
 }
 
@@ -120,14 +120,14 @@ teardown() {
 }
 
 @test "trim_spaces_from_filenames - nominal idempotence" {
-    file="${BATS_TMPDIR}/  file  name  .txt"
+    file="${BATS_TEST_TMPDIR}/  file  name  .txt"
     touch "$file"    
     run trim_spaces_from_filenames "$file"
     [[ "$status" -eq 0 ]]
-    [[ -f "${BATS_TMPDIR}/file name.txt" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/file name.txt" ]]
     [[ ! -f "$file" ]]
 
-    file="${BATS_TMPDIR}/file name.txt"
+    file="${BATS_TEST_TMPDIR}/file name.txt"
     run trim_spaces_from_filenames "$file"
     [[ "$status" -eq 0 ]]
     [[ -f "$file" ]]

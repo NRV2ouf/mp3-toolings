@@ -4,13 +4,13 @@ load '../mp3-metadata.sh'
 load '../utils.sh'
 
 teardown() {
-    rm -rf "${BATS_TMPDIR}/*"
+    rm -rf "${BATS_TEST_TMPDIR}/*"
 }
 
 # _single_file_set_artist_and_title
 
 @test "_single_file_set_artist_and_title - nominal" {
-    file="${BATS_TMPDIR}/Artist - Title.mp3"
+    file="${BATS_TEST_TMPDIR}/Artist - Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
     [[ "$status" -eq 0 ]]
@@ -27,34 +27,34 @@ teardown() {
 }
 
 @test "_single_file_set_artist_and_title - error not a mp3" {
-    file="${BATS_TMPDIR}/Artist - Title.wav"
+    file="${BATS_TEST_TMPDIR}/Artist - Title.wav"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
     [[ "$status" -eq 2 ]]
 }
 
 @test "_single_file_set_artist_and_title - error file doesn't exist" {
-    file="${BATS_TMPDIR}/nonexistent.mp3"
+    file="${BATS_TEST_TMPDIR}/nonexistent.mp3"
     run _single_file_set_artist_and_title "$file"
     [[ "$status" -eq 2 ]]
 }
 
 @test "_single_file_set_artist_and_title - error no dash" {
-    file="${BATS_TMPDIR}/Artist Title.mp3"
+    file="${BATS_TEST_TMPDIR}/Artist Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
     [[ "$status" -eq 3 ]]
 }
 
 @test "_single_file_set_artist_and_title - error multiple dashes" {
-    file="${BATS_TMPDIR}/Artist - Title - Extra.mp3"
+    file="${BATS_TEST_TMPDIR}/Artist - Title - Extra.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
     [[ "$status" -eq 3 ]]
 }
 
 @test "_single_file_set_artist_and_title - error no title" {
-    file="${BATS_TMPDIR}/Artist -.mp3"
+    file="${BATS_TEST_TMPDIR}/Artist -.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
     echo "$status"
@@ -62,21 +62,21 @@ teardown() {
 }
 
 @test "_single_file_set_artist_and_title - error title lacking a space" {
-    file="${BATS_TMPDIR}/Artist -Title.mp3"
+    file="${BATS_TEST_TMPDIR}/Artist -Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
     [[ "$status" -eq 3 ]]
 }
 
 @test "_single_file_set_artist_and_title - error no artist" {
-    file="${BATS_TMPDIR}/- Title.mp3"
+    file="${BATS_TEST_TMPDIR}/- Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
     [[ "$status" -eq 3 ]]
 }
 
 @test "_single_file_set_artist_and_title - error artist lacking a space" {
-    file="${BATS_TMPDIR}/Artist- Title.mp3"
+    file="${BATS_TEST_TMPDIR}/Artist- Title.mp3"
     touch "$file"
     run _single_file_set_artist_and_title "$file"
     [[ "$status" -eq 3 ]]
@@ -85,7 +85,7 @@ teardown() {
 # set_artist_and_title
 
 @test "set_artist_and_title - nominal" {
-    file="${BATS_TMPDIR}/Artist - Title.mp3"
+    file="${BATS_TEST_TMPDIR}/Artist - Title.mp3"
     touch "$file"
 
     run set_artist_and_title "$file"
@@ -98,8 +98,8 @@ teardown() {
 }
 
 @test "set_artist_and_title - nominal 2 files" {
-    file1="${BATS_TMPDIR}/Artist1 - Title1.mp3"
-    file2="${BATS_TMPDIR}/Artist2 - Title2.mp3"
+    file1="${BATS_TEST_TMPDIR}/Artist1 - Title1.mp3"
+    file2="${BATS_TEST_TMPDIR}/Artist2 - Title2.mp3"
     touch "$file1" "$file2"
 
     run set_artist_and_title "$file1" "$file2"
@@ -117,8 +117,8 @@ teardown() {
 }
 
 @test "set_artist_and_title - nominal 2 files, one invalid" {
-    file1="${BATS_TMPDIR}/Artist1 Title1.mp3"
-    file2="${BATS_TMPDIR}/Artist2 - Title2.mp3"
+    file1="${BATS_TEST_TMPDIR}/Artist1 Title1.mp3"
+    file2="${BATS_TEST_TMPDIR}/Artist2 - Title2.mp3"
     touch "$file1" "$file2"
 
     run set_artist_and_title "$file1" "$file2"
@@ -134,7 +134,7 @@ teardown() {
 }
 
 @test "set_artist_and_title - nominal idempotence" {
-    file="${BATS_TMPDIR}/Artist - Title.mp3"
+    file="${BATS_TEST_TMPDIR}/Artist - Title.mp3"
     touch "$file"
 
     run set_artist_and_title "$file"
@@ -160,7 +160,7 @@ teardown() {
 }
 
 @test "set_artist_and_title - file doesn't exist" {
-    file="${BATS_TMPDIR}/nonexistent.mp3"
+    file="${BATS_TEST_TMPDIR}/nonexistent.mp3"
     run set_artist_and_title "$file"
     [[ "$status" -eq 0 ]]
 }
@@ -170,8 +170,8 @@ teardown() {
 @test "_single_file_set_album - nominal" {
     album="AlbumName"
     filename="Artist - Title.mp3"
-    file="${BATS_TMPDIR}/${album}/${filename}"
-    mkdir -p "${BATS_TMPDIR}/${album}"
+    file="${BATS_TEST_TMPDIR}/${album}/${filename}"
+    mkdir -p "${BATS_TEST_TMPDIR}/${album}"
     touch "$file"
 
     run _single_file_set_album "$file"
@@ -185,12 +185,12 @@ teardown() {
 @test "_single_file_set_album - nominal current directory" {
     album="AlbumName"
     filename="Artist - Title.mp3"
-    file="${BATS_TMPDIR}/${album}/${filename}"
-    mkdir -p "${BATS_TMPDIR}/${album}"
+    file="${BATS_TEST_TMPDIR}/${album}/${filename}"
+    mkdir -p "${BATS_TEST_TMPDIR}/${album}"
     touch "$file"
 
 
-    cd "${BATS_TMPDIR}/${album}"
+    cd "${BATS_TEST_TMPDIR}/${album}"
 
     run _single_file_set_album "$filename"
     [[ "$status" -eq 0 ]]
@@ -203,8 +203,8 @@ teardown() {
 @test "_single_file_set_album - nominal album has spaces" {
     album=Album\ Name\ With\ Spaces
     filename="Artist - Title.mp3"
-    file="${BATS_TMPDIR}/${album}/${filename}"
-    mkdir -p "${BATS_TMPDIR}/${album}"
+    file="${BATS_TEST_TMPDIR}/${album}/${filename}"
+    mkdir -p "${BATS_TEST_TMPDIR}/${album}"
     touch "$file"
 
     run _single_file_set_album "$file"
@@ -221,15 +221,15 @@ teardown() {
 }
 
 @test "_single_file_set_album - error not a mp3" {
-    file="${BATS_TMPDIR}/AlbumName/Artist - Title.wav"
-    mkdir -p "${BATS_TMPDIR}/AlbumName"
+    file="${BATS_TEST_TMPDIR}/AlbumName/Artist - Title.wav"
+    mkdir -p "${BATS_TEST_TMPDIR}/AlbumName"
     touch "$file"
     run _single_file_set_album "$file"
     [[ "$status" -eq 1 ]]
 }
 
 @test "_single_file_set_album - error file doesn't exist" {
-    file="${BATS_TMPDIR}/AlbumName/nonexistent.mp3"
+    file="${BATS_TEST_TMPDIR}/AlbumName/nonexistent.mp3"
     run _single_file_set_album "$file"
     [[ "$status" -eq 1 ]]
 }
@@ -237,8 +237,8 @@ teardown() {
 @test "set_album - nominal" {
     album="AlbumName"
     filename="Artist - Title.mp3"
-    file="${BATS_TMPDIR}/${album}/${filename}"
-    mkdir -p "${BATS_TMPDIR}/${album}"
+    file="${BATS_TEST_TMPDIR}/${album}/${filename}"
+    mkdir -p "${BATS_TEST_TMPDIR}/${album}"
     touch "$file"
 
     run set_album "$file"
@@ -259,9 +259,9 @@ teardown() {
     album2="AlbumName2"
     filename1="Artist1 - Title1.mp3"
     filename2="Artist2 - Title2.mp3"
-    file1="${BATS_TMPDIR}/${album1}/${filename1}"
-    file2="${BATS_TMPDIR}/${album2}/${filename2}"
-    mkdir -p "${BATS_TMPDIR}/${album1}" "${BATS_TMPDIR}/${album2}"
+    file1="${BATS_TEST_TMPDIR}/${album1}/${filename1}"
+    file2="${BATS_TEST_TMPDIR}/${album2}/${filename2}"
+    mkdir -p "${BATS_TEST_TMPDIR}/${album1}" "${BATS_TEST_TMPDIR}/${album2}"
     touch "$file1" "$file2"
 
     run set_album "$file1" "$file2"

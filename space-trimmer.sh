@@ -19,14 +19,23 @@ _trim_leading_and_trailing_spaces(){
 # @example
 #   trim_spaces_from_filenames "  example  file  name.txt  " " another   file.txt "
 trim_spaces_from_filenames(){
-    local file path filename
+    local file path filename ext
     for file in "$@"; do
         path=$(dirname -- "$file")
-        filename=$(basename -- "$file")
+        ext="${file##*.}"
+        filename="$file"
+        filename=$(basename -- "$filename")
+        filename="${filename%.*}"
         filename="$(_trim_multi_spaces "$filename")"
         filename="$(_trim_leading_and_trailing_spaces "$filename")"
-        if [[ "$(basename -- "$file")" != "$filename" ]]; then
-            mv -v -- "$file" "${path}/${filename}"
+
+        echo "$file"
+        echo "$path"
+        echo "$filename"
+        echo "$ext"
+
+        if [[ "$(basename -- "$file")" != "${filename}.${ext}" ]]; then
+            mv -v -- "$file" "${path}/${filename}.${ext}"
         fi
     done
 }

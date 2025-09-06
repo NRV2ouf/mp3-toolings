@@ -12,7 +12,7 @@ setup() {
 
 teardown() {
     unset _BRACKETS
-    rm -f "${BATS_TMPDIR}/*"
+    rm -f "${BATS_TEST_TMPDIR}/*"
 }
 
 ## _remove_innermost_pair
@@ -114,37 +114,37 @@ teardown() {
 # remove_brackets_from_filenames
 
 @test "remove_brackets_from_filenames - nominal" {
-    file="${BATS_TMPDIR}/ab(c)de"
+    file="${BATS_TEST_TMPDIR}/ab(c)de"
     touch "$file"
 
     run remove_brackets_from_filenames "$file"
     [[ "$status" -eq 0 ]]
-    [[ -f "$BATS_TMPDIR/abde" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/abde" ]]
     [[ ! -f "$file" ]]
 }
 
 @test "remove_brackets_from_filenames - nominal with extension" {
-    file="${BATS_TMPDIR}/ab(c)de.ext"
+    file="${BATS_TEST_TMPDIR}/ab(c)de.ext"
     touch "$file"
 
     run remove_brackets_from_filenames "$file"
     [[ "$status" -eq 0 ]]
-    [[ -f "$BATS_TMPDIR/abde" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/abde.ext" ]]
     [[ ! -f "$file" ]]
 }
 
 @test "remove_brackets_from_filenames - nominal 2 removals" {
-    file="${BATS_TMPDIR}/ab(c)d[e]"
+    file="${BATS_TEST_TMPDIR}/ab(c)d[e]"
     touch "$file"
 
     run remove_brackets_from_filenames "$file"
     [[ "$status" -eq 0 ]]
-    [[ -f "$BATS_TMPDIR/abd" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/abd" ]]
     [[ ! -f "$file" ]]
 }
 
 @test "remove_brackets_from_filenames - nominal nothing to remove" {
-    file="${BATS_TMPDIR}/abcde"
+    file="${BATS_TEST_TMPDIR}/abcde"
     touch "$file"
 
     run remove_brackets_from_filenames "$file"
@@ -153,38 +153,38 @@ teardown() {
 }
 
 @test "remove_brackets_from_filenames - nominal real case" {
-    file="${BATS_TMPDIR}/artist (ft. enculos) - title [audio version].mp3"
+    file="${BATS_TEST_TMPDIR}/artist (ft. enculos) - title [audio version].mp3"
     touch "$file"
 
     run remove_brackets_from_filenames "$file"
     [[ "$status" -eq 0 ]]
-    [[ -f "$BATS_TMPDIR/artist  - title .mp3" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/artist  - title .mp3" ]]
     [[ ! -f "$file" ]]
 }
 
 @test "remove_brackets_from_filenames - nominal 2 files" {
-    file1="${BATS_TMPDIR}/ab(c)d[e]"
-    file2="${BATS_TMPDIR}/xyz{123}foo"
+    file1="${BATS_TEST_TMPDIR}/ab(c)d[e]"
+    file2="${BATS_TEST_TMPDIR}/xyz{123}foo"
     touch "$file1" "$file2"
 
     run remove_brackets_from_filenames "$file1" "$file2"
     [[ "$status" -eq 0 ]]
-    [[ -f "$BATS_TMPDIR/abd" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/abd" ]]
     [[ ! -f "$file1" ]]
-    [[ -f "$BATS_TMPDIR/xyzfoo" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/xyzfoo" ]]
     [[ ! -f "$file2" ]]
 }
 
 @test "remove_brackets_from_filenames - nominal idempotence" {
-    file="${BATS_TMPDIR}/ab(c)d[e]"
+    file="${BATS_TEST_TMPDIR}/ab(c)d[e]"
     touch "$file"
 
     run remove_brackets_from_filenames "$file"
     [[ "$status" -eq 0 ]]
-    [[ -f "$BATS_TMPDIR/abd" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/abd" ]]
     [[ ! -f "$file" ]]
 
-    run remove_brackets_from_filenames "$BATS_TMPDIR/abd"
+    run remove_brackets_from_filenames "${BATS_TEST_TMPDIR}/abd"
     [[ "$status" -eq 0 ]]
-    [[ -f "$BATS_TMPDIR/abd" ]]
+    [[ -f "${BATS_TEST_TMPDIR}/abd" ]]
 }
