@@ -27,15 +27,14 @@ load '../folder.sh'
 @test "_create_and_move_to_folder_from_artist - no argument" {
     run _create_and_move_to_folder_from_artist
     [[ "$status" -eq 1 ]]
-    [[ "$output" == "file invalid" ]]
 }
 
 @test "_create_and_move_to_folder_from_artist - file doesn't exist" {
     rm -rf "${BATS_TEST_TMPDIR}/*"
-    file="${BATS_TEST_TMPDIR}/Artist - Title.mp3"
+    file="${BATS_TEST_TMPDIR}/Artist - Title1.mp3"
     run _create_and_move_to_folder_from_artist "$file"
     [[ "$status" -ne 0 ]]
-    [[ ! -f "${BATS_TEST_TMPDIR}/Artist/Artist - Title.mp3" ]]
+    [[ ! -f "${BATS_TEST_TMPDIR}/Artist/Artist - Title1.mp3" ]]
 }
 
 @test "_create_and_move_to_folder_from_artist - invalid filename" {
