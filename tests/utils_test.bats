@@ -42,6 +42,18 @@ load '../utils.sh'
     [[ "$output" = "title" ]]
 }
 
+@test "_get_title - with extension" {
+    run _get_title "artist - title.mp3"
+    [[ "$status" -eq 0 ]]
+    [[ "$output" = "title" ]]
+}
+
+@test "_get_title - with path" {
+    run _get_title "/some/path/artist - title.mp3"
+    [[ "$status" -eq 0 ]]
+    [[ "$output" = "title" ]]
+}
+
 @test "_get_title - no dash" {
     run _get_title "artist title"
     [[ "$status" -ne 0 ]]
@@ -84,4 +96,16 @@ load '../utils.sh'
     run _get_artist ""
     [[ "$status" -ne 0 ]]
     [[ "$output" = "" ]]
+}
+
+@test "_get_artist - with path" {
+    run _get_artist "/some/path/artist - title"
+    [[ "$status" -eq 0 ]]
+    [[ "$output" = "artist" ]]
+}
+
+@test "_get_artist - with extension" {
+    run _get_artist "artist - title.mp3"
+    [[ "$status" -eq 0 ]]
+    [[ "$output" = "artist" ]]
 }

@@ -21,6 +21,7 @@ _count_good_dashes(){
 #   -> "title"
 _get_title(){
     local name="$1"
+    name="${name%.*}"  # Remove file extension
     if [[ "$(_count_good_dashes "$name")" -ne 1 ]] ; then
         echo ""
         return 1
@@ -36,6 +37,7 @@ _get_title(){
 #   -> "artist"
 _get_artist(){
     local name="$1"
+    name="${name##*/}"  # Remove path
     if [[ "$(_count_good_dashes "$name")" -ne 1 ]] ; then
         echo ""
         return 1
