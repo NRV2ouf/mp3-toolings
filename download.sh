@@ -28,9 +28,9 @@ download_mp3(){
         --cookies-from-browser firefox \
         --embed-thumbnail --add-metadata --embed-metadata \
         --output "$tmp_folder/%(title)s.%(ext)s" \
-        "$url"
+        "$url" 1> /dev/null
 
-    echo -e "\e[34mDownloaded to $tmp_folder\e[0m"
+    echo "$tmp_folder"
 }
 
 # @description Downloads video from the provided URL and saves it as mp4 files.
