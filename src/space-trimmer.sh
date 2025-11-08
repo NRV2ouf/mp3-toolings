@@ -29,13 +29,8 @@ trim_spaces_from_filenames(){
         filename="$(_trim_multi_spaces "$filename")"
         filename="$(_trim_leading_and_trailing_spaces "$filename")"
 
-        echo "$file"
-        echo "$path"
-        echo "$filename"
-        echo "$ext"
-
         if [[ "$(basename -- "$file")" != "${filename}.${ext}" ]]; then
-            mv -v -- "$file" "${path}/${filename}.${ext}"
+            mv -- "$file" "${path}/${filename}.${ext}"
         fi
     done
 }
