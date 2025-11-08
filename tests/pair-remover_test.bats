@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load '../pair-remover.sh'
+load '../src/pair-remover.sh'
 
 setup() {
     declare -gA _BRACKETS=(

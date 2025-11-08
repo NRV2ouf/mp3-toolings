@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-load '../mp3-metadata.sh'
-load '../utils.sh'
+load '../src/mp3-metadata.sh'
+load '../src/utils.sh'
 
 # _single_file_set_artist_and_title
 

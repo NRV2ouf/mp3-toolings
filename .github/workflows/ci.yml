@@ -44,7 +44,7 @@ jobs:
       - name: Lint scripts
         run: |
           # Ignore SC2148 (missing shebang)
-          shellcheck --exclude=SC2148 *.sh
+          shellcheck --exclude=SC2148 ./src/*.sh
 
   docs:
     runs-on: ubuntu-latest
@@ -73,6 +73,7 @@ jobs:
 
       - name: Generate docs
         run: |
+          cd ./src
           scripts=$(ls *.sh)
           for script in $scripts; do
             shdoc < "./$script" > ${script%.sh}.md
@@ -90,11 +91,9 @@ jobs:
           rm -rf wiki/*
 
           # Copy the generated doc
-          cp *.md wiki/
+          cp ./src/*.md wiki/
+          cp README.md wiki/Home.md || true
           cd wiki
-
-          # Rename README.md to Home.md if it exists
-          mv README.md Home.md || true
 
           # Commit and push changes
           git add .

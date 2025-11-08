@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-load '../utils.sh'
-load '../folder.sh'
+load '../src/utils.sh'
+load '../src/folder.sh'
 
 # _create_and_move_to_folder_from_artist
 

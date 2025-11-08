@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-load '../name-duplicate.sh'
-
+load '../src/name-duplicate.sh'
+load '../src/utils.sh'
 
 ## _remove_artist_duplication
 

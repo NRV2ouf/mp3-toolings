@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load '../space-trimmer.sh'
+load '../src/space-trimmer.sh'
 
 ## _trim_multi_spaces
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load '../utils.sh'
+load '../src/utils.sh'
 
 ## _count_good_dashes
 

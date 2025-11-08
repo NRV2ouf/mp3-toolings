@@ -5,8 +5,6 @@
 #   the resulting filename will have the channel name duplicated.
 #   This function set removes such duplications.
 
-source ./utils.sh
-
 # description If the filename contains the artist name duplicated (e.g.,
 #   "Artist - Artist - Song Title.mp3"), this function removes the duplication
 #   to result in "Artist - Song Title.mp3".
