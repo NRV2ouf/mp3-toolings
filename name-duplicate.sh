@@ -3,7 +3,7 @@
 # @description The filename follows the pattern `%(channel)s - %(title)s.%(ext)s`
 #   which means that if the title of the video already contains the channel name,
 #   the resulting filename will have the channel name duplicated.
-#   Thus, this script removes such duplications from the filenames.
+#   This function set removes such duplications.
 
 source ./utils.sh
 
@@ -23,9 +23,9 @@ _remove_artist_duplication() {
 
 # @description For each provided path, the function checks if the filename
 #   contains the artist name duplicated and removes the duplication if found.
-# @arg $@ One or more paths to scan. Each argument should be a directory or file.
+# @arg $@ Files One or more paths to scan. Each argument should be a directory or file.
 # @example
-#   remove_artist_duplication_from_filenames "/path/to/Artist - Artist - Song Title.mp3"
+#   remove_artist_duplication_from_filenames "/path/to/Artist - Artist - Song Title.mp3" "/another/path/Artist - Song Title.mp3"
 remove_artist_duplication_from_filenames() {
     for file in "$@"; do
         _remove_artist_duplication "$file"
