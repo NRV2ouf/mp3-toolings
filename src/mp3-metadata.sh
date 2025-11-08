@@ -7,9 +7,6 @@
 #  title ID3v2 tags accordingly.
 # @TODO: add more patterns
 
-RED='\033[0;31m'
-NC='\033[0m'
-
 # @description A helper function that sets the artist and title metadata for a 
 #   single mp3 file based on the filename pattern "artist - title".
 # @details This function extracts the artist and title from the filename by 

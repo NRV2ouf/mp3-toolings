@@ -3,6 +3,9 @@
 # @description This script contains a collection of utility functions that are 
 #  usefull for other scripts.
 
+RED='\033[0;31m'
+NC='\033[0m'
+
 # @description Counts the number of 'good' dashes (' - ') in the given string.
 # @arg $1 String The input string to process.
 # @stdout The count of dashes in the input string.
