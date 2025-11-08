@@ -16,7 +16,8 @@ A set of functions designed to:
 flowchart TD
   Empty --> |download_mp3| Downloaded
   Downloaded --> |remove_brackets_from_filenames| Pairless
-  Pairless --> |trim_spaces_from_filenames| SpaceTrimmed
+  Pairless --> |remove_duplicate_artist_names| DuplicateLess
+  DuplicateLess --> |trim_spaces_from_filenames| SpaceTrimmed
   SpaceTrimmed --> |move_files_to_artist_folder| Sorted
 
 classDef leftAlign text-align:left, font-family:monospace;
@@ -27,40 +28,50 @@ Empty["<pre>
 
 Downloaded["<pre>
 📁 Music/$TMPDIR/
-├── artist1 - song1.mp3
-├── artist1 - song2 (demo).mp3
-├── artist2 - song3 [live] (lyrics).mp3
-├── artist3 - song4 [live] - lyrics.mp3
-└── song5 (lyrics).mp3
+├── channel1 - artist1 - song1.mp3
+├── channel1 - artist1 - song2 (demo).mp3
+├── channel2 - artist2 - song3 [live] (lyrics).mp3
+├── channel3 - artist3 - song4 [live] - lyrics.mp3
+└── channel4 - song5 (lyrics).mp3
 </pre>"]:::leftAlign
 
 Pairless["<pre>
 📁 Music/$TMPDIR/
-├── artist1 - song1.mp3
-├── artist1 - song2 .mp3
-├── artist2 - song3  .mp3
-├── artist3 - song4  - lyrics.mp3
-└── song5 .mp3
+├── channel1 - artist1 - song1.mp3
+├── channel1 - artist1 - song2 .mp3
+├── channel2 - artist2 - song3  .mp3
+├── channel3 - artist3 - song4  - lyrics.mp3
+└── channel4 - song5 .mp3
+</pre>"]:::leftAlign
+
+DuplicateLess["<pre>
+📁 Music/$TMPDIR/
+├── channel1 - song1.mp3
+├── channel1 - song2 .mp3
+├── channel2 - song3  .mp3
+├── channel3 - artist3 - song4  - lyrics.mp3
+└── channel4 - song5 .mp3
 </pre>"]:::leftAlign
 
 SpaceTrimmed["<pre>
 📁 Music/$TMPDIR/
-├── artist1 - song1.mp3
-├── artist1 - song2.mp3
-├── artist2 - song3.mp3
-├── artist3 - song4 - lyrics.mp3
-└── song5.mp3
+├── channel1 - song1.mp3
+├── channel1 - song2.mp3
+├── channel2 - song3.mp3
+├── channel3 - artist3 - song4 - lyrics.mp3
+└── channel4 - song5.mp3
 </pre>"]:::leftAlign
 
 Sorted["<pre>
 📁 Music/$TMPDIR/
-├── artist1/
-│   ├── artist1 - song1.mp3
-│   └── artist1 - song2.mp3
-├── artist2/
-│   └── artist2 - song3.mp3
-├── artist3 - song4 - lyrics.mp3
-└── song5.mp3
+├── channel1/
+│   ├── channel1 - song1.mp3
+│   └── channel1 - song2.mp3
+├── channel2/
+│   └── channel2 - song3.mp3
+├── channel4/
+│   └── channel4 - song5.mp3
+└── channel3 - artist3 - song4 - lyrics.mp3
 </pre>"]:::leftAlign
 ```
 
