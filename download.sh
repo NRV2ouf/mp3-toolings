@@ -27,7 +27,7 @@ download_mp3(){
         -x --audio-format mp3 \
         --cookies-from-browser firefox \
         --embed-thumbnail --add-metadata --embed-metadata \
-        --output "$tmp_folder/%(title)s.%(ext)s" \
+        --output "$tmp_folder/%(channel)s - %(title)s.%(ext)s" \
         "$url" 1> /dev/null
 
     echo "$tmp_folder"
@@ -49,7 +49,7 @@ download_mp4() {
         -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4' \
         --merge-output-format mp4 \
         --embed-thumbnail --add-metadata --embed-metadata \
-        --output "$tmp_folder/%(title)s.%(ext)s" \
+        --output "$tmp_folder/%(channel)s - %(title)s.%(ext)s" \
         "$url"
 
     echo -e "\e[34mDownloaded to $tmp_folder\e[0m"
