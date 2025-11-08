@@ -10,7 +10,59 @@ A set of functions designed to:
 
 ### [Documentation](https://github.com/NRV2ouf/mp3-toolings/wiki)
 
+## Workflow example
 
+```mermaid
+flowchart TD
+  Empty --> |download_mp3| Downloaded
+  Downloaded --> |remove_brackets_from_filenames| Pairless
+  Pairless --> |trim_spaces_from_filenames| SpaceTrimmed
+  SpaceTrimmed --> |move_files_to_artist_folder| Sorted
+
+classDef leftAlign text-align:left, font-family:monospace;
+
+Empty["<pre>
+📁 Music/
+</pre>"]:::leftAlign
+
+Downloaded["<pre>
+📁 Music/$TMPDIR/
+├── artist1 - song1.mp3
+├── artist1 - song2 (demo).mp3
+├── artist2 - song3 [live] (lyrics).mp3
+├── artist3 - song4 [live] - lyrics.mp3
+└── song5 (lyrics).mp3
+</pre>"]:::leftAlign
+
+Pairless["<pre>
+📁 Music/$TMPDIR/
+├── artist1 - song1.mp3
+├── artist1 - song2 .mp3
+├── artist2 - song3  .mp3
+├── artist3 - song4  - lyrics.mp3
+└── song5 .mp3
+</pre>"]:::leftAlign
+
+SpaceTrimmed["<pre>
+📁 Music/$TMPDIR/
+├── artist1 - song1.mp3
+├── artist1 - song2.mp3
+├── artist2 - song3.mp3
+├── artist3 - song4 - lyrics.mp3
+└── song5.mp3
+</pre>"]:::leftAlign
+
+Sorted["<pre>
+📁 Music/$TMPDIR/
+├── artist1/
+│   ├── artist1 - song1.mp3
+│   └── artist1 - song2.mp3
+├── artist2/
+│   └── artist2 - song3.mp3
+├── artist3 - song4 - lyrics.mp3
+└── song5.mp3
+</pre>"]:::leftAlign
+```
 
 ## Requirements
 
